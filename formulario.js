@@ -1,97 +1,40 @@
-var formulario = document.querySelector("#form")
+document.addEventListener('DOMContentLoaded', function() {
+  const inviteForm = document.getElementById('inviteForm');
+  const guestList = document.getElementById('guestList');
+  const errorMessage = document.getElementById('errorMessage'); // Referencia al elemento de mensajes de error
 
-formulario.onsubmit = function(e) {
+  inviteForm.addEventListener('submit', function(event) {
+      event.preventDefault(); // Evita la recarga de la página al enviar el formulario
+      const guestName = document.getElementById('guestName').value.trim();
 
-  e.prevent();
-  
-  var n = formulario.elements[0]
-  var e = formulario.elements[1]
-  var na = formulario.elements[2]
+      // Validar el nombre del invitado
+      if (guestName === "") {
+          // Mostrar mensaje de error si el nombre está vacío
+          errorMessage.textContent = "Por favor, ingresa un nombre válido.";
+          errorMessage.classList.remove('d-none');
+          return;
+      }
 
-  var nombre = n.value
-  var edad = e.value
+      // Ocultar mensaje de error si la validación es exitosa
+      errorMessage.classList.add('d-none');
 
-  var i = na.selectedIndex
-  var nacionalidad = na.options[i].value
-  console.log(nombre, edad)
-  console.log(nacionalidad)
+      // Crear un nuevo elemento de lista para el invitado
+      const listItem = document.createElement('li');
+      listItem.textContent = guestName;
 
-  if (nombre.length === 0) {
-    n.classList.add("error")
-  }
-  if (edad < 18 || edad > 120) {
-    e.classList.add("error")
-  }
+      // Crear botón de eliminar
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = "Eliminar";
+      // Añadir evento de clic al botón de eliminar
+      deleteButton.addEventListener('click', function() {
+          guestList.removeChild(listItem);
+      });
 
-if (nombre.length > 0 
-  && (edad > 18 
-    && edad < 120) ) {
-  agregarInvitado(nombre, edad, nacionalidad)
-  }
-}
-
-var botonBorrar = document.createElement("button")
-botonBorrar.textContent = "Eliminar invitado"
-botonBorrar.id = "boton-borrar"
-var corteLinea = document.createElement("br")
-document.body.appendChild(corteLinea)
-document.body.appendChild(botonBorrar);
-
-function agregarInvitado(nombre, edad, nacionalidad) {
-
-  if (nacionalidad === "ar") {
-    nacionalidad = "Argentina"
-  }
-  else if (nacionalidad === "mx") {
-    nacionalidad = "Mexicana"
-  }
-  else if (nacionalidad === "vnzl") {
-    nacionalidad = "Venezolana"
-  }
-  else if (nacionalidad === "per") {
-    nacionalidad = "Peruana"
-  }
-
-var lista = document.getElementById("lista-de-invitados")
-
-var elementoLista = document.createElement("div")
-elementoLista.classList.added("elemento-lista")
-lista.appendChild(elementoLista)
-
-var spanNombre = document.createElement("span")
-var inputNombre = document.createElement("input")
-var espacio = document.createElement("br")
-spanNombre.textContent = "Nombre: "
-inputNombre.value = nombre 
-elementoLista.appendChild(spanNombre)
-elementoLista.appendChild(inputNombre)
-elementoLista.appendChild(espacio)
-
-function crearElemento(descripcion, valor) {
-var spanNombre = document.createElement("span")
-var inputNombre = document.createElement("input")
-var espacio = document.createElement("br")
-spanNombre.textContent = descripcion + ": "
-inputNombre.value = valor 
-elementoLista.appendChild(spanNombre)
-elementoLista.appendChild(inputNombre)
-elementoLista.appendChild(espacio)
-}
-
-crearElemento("Nombre", nombre)
-crearElemento("Edad", edad)
-crearElemento("Nacionalidad", nacionalidad)
-
-
-var botonBorrar = document.createElement("button")
-botonBorrar.textContent = "Eliminar invitado"
-botonBorrar.id = "boton-borrar"
-var corteLinea = document.createElement("br")
-elementoLista.appendChild(corteLinea)
-elementoLista.appendChild(botonBorrar);
-
- botonBorrar.onclick = function() {
-// this.parentNode.style.display = 'none';
-botonBorrar.parentNode.remove()
-  }
-}
+      // Añadir el botón de eliminar al elemento de lista
+      listItem.appendChild(deleteButton);
+      // Añadir el elemento de lista a la lista de invitados
+      guestList.appendChild(listItem);
+      // Reiniciar el formulario
+      inviteForm.reset();
+  });
+});
